@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 
 
 /**
@@ -33,9 +33,13 @@ public class JavaProcess {
 
     private static final String TARGET_CLASS = "org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessCommunicationClient";
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             JavaProcess.class);
-
+    
+    private Integer startPort;
+    
+    private Integer endPort;
+    
     private Integer socketPort;
 
     private final boolean debugEnabled;
@@ -45,25 +49,29 @@ public class JavaProcess {
     /**
      * Creates a new JavaProcess instance without debugging.
      * 
-     * @param socketPort
+     * @param socketPortStart
      *            the port of the remote application.
      */
-    public JavaProcess(Integer socketPort) {
-        this(socketPort, null);
+    public JavaProcess(Integer socketPortStart, Integer socketPortEnd) {
+        this(socketPortStart, socketPortEnd, null);
     }
 
     /**
      * Creates a new JavaProcess instance with debugging.
      * 
-     * @param socketPort
+     * @param socketPortStart
      *            the port of the remote application.
      * @param debugPort
      *            the debug port.
      */
-    public JavaProcess(Integer socketPort, Integer debugPort) {
+    public JavaProcess(Integer socketPortStart, Integer socketPortEnd, Integer debugPort) {
 
-        initSocketPort(socketPort);
-
+        initSocketPort(socketPortStart);
+        
+        this.startPort = socketPortStart;
+        
+        this.endPort = socketPortEnd;
+        
         if (debugPort == null) {
             this.debugEnabled = false;
             logger.debug("Debug disabled.");
@@ -100,29 +108,46 @@ public class JavaProcess {
 
         String javaHome = System.getProperty("java.home");
         String fileSeparator = System.getProperty("file.separator");
-
-        StringBuilder command = new StringBuilder();
-        command.append(javaHome);
-		command.append(fileSeparator);
-		command.append("bin");
-		command.append(fileSeparator);
-        command.append("java -cp ");
-        command.append(classpath);
-
-        if (debugEnabled) {
-            command.append(" -Xdebug -Xrunjdwp:transport=dt_socket,address=");
-            command.append(debugPort);
-            command.append(",server=y,suspend=n ");
-        }
-        
-        command.append(" ");
-        command.append(TARGET_CLASS);
-        command.append(" ");
-        command.append(socketPort);
-
-        Process process = Runtime.getRuntime().exec(command.toString());
-
-        return new ProcessCommunication(process, socketPort, "localhost");
+        int port = startPort;
+        int portMax = endPort;
+        ProcessCommunication proc = null;
+        while(port <= portMax) {
+        	if(port != startPort) {
+        		initSocketPort(port);
+        	}
+	        try {
+	        	StringBuilder command = new StringBuilder();
+		        command.append(javaHome);
+				command.append(fileSeparator);
+				command.append("bin");
+				command.append(fileSeparator);
+		        command.append("java -cp ");
+		        command.append(classpath);
+		
+		        if (debugEnabled) {
+		            command.append(" -Xdebug -Xrunjdwp:transport=dt_socket,address=");
+		            command.append(debugPort);
+		            command.append(",server=y,suspend=n ");
+		        }
+		        
+		        command.append(" ");
+		        command.append(TARGET_CLASS);
+		        command.append(" ");
+		        command.append(socketPort);
+		        
+		        Process process = Runtime.getRuntime().exec(command.toString());
+		        try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		        proc = new ProcessCommunication(process, socketPort, "localhost");
+		        break;
+	        } catch(IOException e) {
+	        	port++;
+	        }
+    	}
+        return proc;
     }
 
     public String prepareClasspath(List<URL> urls) {

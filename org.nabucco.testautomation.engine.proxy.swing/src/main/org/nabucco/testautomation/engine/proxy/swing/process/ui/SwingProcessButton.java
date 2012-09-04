@@ -17,16 +17,15 @@
 package org.nabucco.testautomation.engine.proxy.swing.process.ui;
 
 import java.awt.Component;
-import java.util.List;
 
 import javax.swing.JButton;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.event.SwingComponentEventCreator;
-import org.nabucco.testautomation.engine.proxy.swing.process.ui.finder.SwingComponentFinder;
-
-import org.nabucco.testautomation.facade.datatype.property.BooleanProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.engine.proxy.swing.process.ui.finder.MultipleEntriesFoundException;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.TextProperty;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
@@ -39,16 +38,20 @@ class SwingProcessButton extends SwingProcessComponentSupport implements SwingPr
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void internalExecute(PropertyList propertyList, List<Metadata> metadataList,
+    public void internalExecute(PropertyList propertyList, Metadata metadata,
             SwingActionType actionType) {
 
     	if (actionType == SwingActionType.IS_AVAILABLE) {
-    		BooleanProperty prop = (BooleanProperty) propertyList.getPropertyList().get(0).getProperty();
-    		checkAvailability(metadataList, prop);
+    		checkAvailability(propertyList, metadata);
     		return;
     	}
     	
-        Component component = SwingComponentFinder.getInstance().findComponent(metadataList);
+        Component component = null;
+		try {
+			component = find(propertyList, metadata);
+		} catch (MultipleEntriesFoundException e) {
+			this.failure("More than one Component found.");
+		}
 
         if (component == null) {
             this.failure("SwingButton not found.");
@@ -71,10 +74,32 @@ class SwingProcessButton extends SwingProcessComponentSupport implements SwingPr
         case RIGHTCLICK:
             executeRightClick(button);
             break;
+        case READ:
+        	String content = executeRead(button);
+        	this.addProperty(PropertyHelper.createTextProperty(CONTENT, content));
+		case READPROPERTY:
+			TextProperty returnValue = getProperty(component, ((TextProperty) PropertyHelper.getFromList(propertyList, NAME)).getValue().getValue());
+			if (returnValue != null) {
+				this.addProperty(returnValue);
+			}
+			break;
+		case READALLPROPERTIES:
+			PropertyList properties = getProperties(component);
+			this.addProperty(properties);
+			break;
         }
     }
 
-    private void executeLeftClick(JButton button) {
+    /**
+	 * 
+	 * @param button
+	 * @return
+	 */
+	private String executeRead(JButton button) {
+		return button.getText();
+	}
+
+	private void executeLeftClick(JButton button) {
         SwingComponentEventCreator.createComponentClickEvent(button);
     }
 
@@ -84,7 +109,7 @@ class SwingProcessButton extends SwingProcessComponentSupport implements SwingPr
 
 	@Override
 	boolean isAvailable(Component component) {
-		return component instanceof JButton && !((JButton) component).isEnabled();
+		return component instanceof JButton && ((JButton) component).isEnabled();
 	}
 
 }

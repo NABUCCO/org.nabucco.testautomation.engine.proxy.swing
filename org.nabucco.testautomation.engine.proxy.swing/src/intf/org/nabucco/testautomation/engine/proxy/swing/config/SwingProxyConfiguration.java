@@ -56,7 +56,14 @@ public interface SwingProxyConfiguration extends ProxyEngineConfiguration {
      * 
      * @return the port
      */
-    public int getPort();
+    public int getStartPort();
+    
+    /**
+     * Gets the port.
+     * 
+     * @return the port
+     */
+    public int getEndPort();
 
     /**
      * Gets the port enabled for debugging. If DebugPort is null, debugging will be disabled.
@@ -64,5 +71,12 @@ public interface SwingProxyConfiguration extends ProxyEngineConfiguration {
      * @return the debug port
      */
     public Integer getDebugPort();
+
+	/**
+	 * 
+	 * @param applicationName
+	 * @return
+	 */
+	String[] getArguments(String applicationName);
     
 }

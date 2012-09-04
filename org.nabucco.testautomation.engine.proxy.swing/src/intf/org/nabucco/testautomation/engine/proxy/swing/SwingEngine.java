@@ -120,6 +120,14 @@ public interface SwingEngine extends SubEngine {
      * @return the SwingTree
      */
     SwingTree getSwingTree();
+    
+    /**
+     * Gets an implementation of {@link SwingEngineOperation}´
+     * to print out a swing tree.
+     * 
+     * @return the SwingTree
+     */
+    SwingPrint getSwingPrint();
 
     /**
      * Gets an implementation of {@link SwingEngineOperation}´
@@ -136,5 +144,17 @@ public interface SwingEngine extends SubEngine {
      * @return the SwingComboBox
      */
     SwingComboBox getSwingComboBox();
+
+	/**
+	 * 
+	 * @return
+	 */
+	SwingJComponent getSwingComponent();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	SwingLabel getSwingLabel();
     
 }

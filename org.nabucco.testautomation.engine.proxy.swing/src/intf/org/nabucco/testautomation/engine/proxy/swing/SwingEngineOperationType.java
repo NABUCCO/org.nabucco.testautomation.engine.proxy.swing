@@ -90,10 +90,25 @@ public enum SwingEngineOperationType implements SubEngineOperationType {
      * EngineOperationType for a swing text input.
      */
     SWING_TEXTINPUT,
+    
+    /**
+     * EngineOperationType for a printout of the swingtree.
+     */
+    SWING_PRINT,
 
     /**
      * EngineOperationType for a swing tree.
      */
-    SWING_TREE;
+    SWING_TREE,
+    
+    /**
+     * EngineOperationType for a swing label.
+     */
+    SWING_LABEL,
+    
+    /**
+     * EngineOperationType for a component.
+     */
+    SWING_COMPONENT;
 
 }

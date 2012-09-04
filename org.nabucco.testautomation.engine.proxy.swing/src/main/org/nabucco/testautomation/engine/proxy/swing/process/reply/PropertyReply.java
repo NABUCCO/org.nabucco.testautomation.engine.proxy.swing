@@ -16,7 +16,8 @@
 */
 package org.nabucco.testautomation.engine.proxy.swing.process.reply;
 
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
+import org.nabucco.testautomation.property.facade.datatype.base.Property;
+
 
 
 /**

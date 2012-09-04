@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 PRODYNA AG
+ * Copyright 2012 PRODYNA AG
  *
  * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,33 @@ package org.nabucco.testautomation.engine.proxy.swing.process.ui;
 
 import java.awt.Component;
 
-import javax.swing.text.JTextComponent;
+import javax.swing.JLabel;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.event.SwingComponentEventCreator;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.finder.MultipleEntriesFoundException;
-import org.nabucco.testautomation.property.facade.datatype.NumericProperty;
 import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.property.facade.datatype.TextProperty;
 import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
- * SwingProcessText
+ * SwingProcessLabel
  * 
- * @author Nicolas Moser, PRODYNA AG
+ * @author Florian Schmidt, PRODYNA AG
  */
-class SwingProcessText extends SwingProcessComponentSupport implements SwingProcessComponent {
+public class SwingProcessLabel extends SwingProcessComponentSupport {
 
-	private static final long	serialVersionUID	= 1L;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 1858928298368535472L;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void internalExecute(PropertyList propertyList, Metadata metadata, SwingActionType actionType) {
+	void internalExecute(PropertyList propertyList, Metadata metadata, SwingActionType actionType) {
 		if (actionType == SwingActionType.IS_AVAILABLE) {
 			checkAvailability(propertyList, metadata);
 			return;
@@ -54,21 +59,15 @@ class SwingProcessText extends SwingProcessComponentSupport implements SwingProc
 			this.failure("SwingTextInput not found.");
 			return;
 		}
-		if (!(component instanceof JTextComponent)) {
+		if (!(component instanceof JLabel)) {
 			this.failure("Component is not of type JTextComponent but " + component.getClass().getName());
 			return;
 		}
-		JTextComponent textField = (JTextComponent) component;
+		JLabel textField = (JLabel) component;
 		switch (actionType) {
-			case ENTER:
-				enterText(textField, ((TextProperty) PropertyHelper.getFromList(propertyList, VALUE)).getValue().getValue());
-				break;
 			case READ:
-				TextProperty property = PropertyHelper.createTextProperty(CONTENT, readText(textField));
+				TextProperty property = PropertyHelper.createTextProperty(CONTENT, readLabel(textField));
 				this.addProperty(property);
-				break;
-			case PRESS_KEY:
-				pressKey(textField, ((NumericProperty) PropertyHelper.getFromList(propertyList, KEYCODE)).getValue().getValue().intValue());
 				break;
 			case READPROPERTY:
 				TextProperty returnValue = getProperty(component, ((TextProperty) PropertyHelper.getFromList(propertyList, NAME)).getValue().getValue());
@@ -83,24 +82,16 @@ class SwingProcessText extends SwingProcessComponentSupport implements SwingProc
 		}
 	}
 
-	private void pressKey(JTextComponent textField, Integer keyCode) {
-		SwingComponentEventCreator.createComponentKeyPressEvent(textField, keyCode);
-	}
-
-	private void enterText(JTextComponent textField, String msg) {
-		boolean success = SwingComponentEventCreator.createTextEvent(textField, msg);
-		if (!success) {
-			this.failure("Could not enter text '" + msg + "' into JTextComponent");
-		}
-	}
-
-	private String readText(JTextComponent textField) {
+	private String readLabel(JLabel textField) {
 		String text = SwingComponentEventCreator.readText(textField);
 		return text;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	boolean isAvailable(Component component) {
-		return component instanceof JTextComponent && (((JTextComponent) component).isEnabled() || ((JTextComponent) component).isEditable());
+		return component instanceof JLabel;
 	}
 }

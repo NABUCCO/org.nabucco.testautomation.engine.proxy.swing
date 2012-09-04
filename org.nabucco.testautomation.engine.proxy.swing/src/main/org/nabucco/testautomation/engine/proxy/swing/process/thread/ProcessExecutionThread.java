@@ -16,8 +16,8 @@
 */
 package org.nabucco.testautomation.engine.proxy.swing.process.thread;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 
 
 /**
@@ -27,7 +27,7 @@ import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
  */
 public class ProcessExecutionThread extends Thread {
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             ProcessExecutionThread.class);
 
     private Process process;

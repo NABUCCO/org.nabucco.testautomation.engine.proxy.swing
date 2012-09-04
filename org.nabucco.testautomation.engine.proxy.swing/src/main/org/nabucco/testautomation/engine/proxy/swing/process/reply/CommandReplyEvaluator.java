@@ -19,10 +19,9 @@ package org.nabucco.testautomation.engine.proxy.swing.process.reply;
 import java.util.List;
 
 import org.apache.log4j.Level;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
-
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
+import org.nabucco.testautomation.property.facade.datatype.base.Property;
 import org.nabucco.testautomation.result.facade.datatype.ActionResponse;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 
@@ -33,7 +32,7 @@ import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType
  */
 public class CommandReplyEvaluator {
 
-    private static NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             CommandReplyEvaluator.class);
 
     /**

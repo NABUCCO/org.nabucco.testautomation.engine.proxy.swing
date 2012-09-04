@@ -19,8 +19,8 @@ package org.nabucco.testautomation.engine.proxy.swing.classloader;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 
 
 /**
@@ -30,7 +30,7 @@ import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
  */
 public class TargetApplicationClassloader {
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             TargetApplicationClassloader.class);
 
     private ClassLoader cl;

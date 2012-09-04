@@ -22,8 +22,7 @@ import java.util.List;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
-
-import org.nabucco.testautomation.facade.datatype.property.base.PropertyType;
+import org.nabucco.testautomation.property.facade.datatype.base.PropertyType;
 
 /**
  * SwingComponentConstraints

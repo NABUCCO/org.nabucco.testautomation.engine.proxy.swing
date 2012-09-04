@@ -24,14 +24,13 @@ import java.util.Map.Entry;
 
 import javax.swing.JTable;
 
-import org.nabucco.testautomation.engine.base.util.PropertyHelper;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTable;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.event.SwingComponentEventCreator;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.StringProperty;
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
-import org.nabucco.testautomation.facade.datatype.property.base.PropertyContainer;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.TextProperty;
+import org.nabucco.testautomation.property.facade.datatype.base.Property;
+import org.nabucco.testautomation.property.facade.datatype.base.PropertyContainer;
 
 /**
  * Maps read data from a {@link JTable} to a {@link PropertyMap}.
@@ -83,17 +82,15 @@ class HierarchicalSwingTableMapper implements SwingTableMapper {
 
         for (int row = 0; row < table.getModel().getRowCount(); row++) {
 
-            String name = SwingComponentEventCreator.readText(table, row, 0).replace(":", "")
-                    .replace(" ", "");
+            String name = SwingComponentEventCreator.readText(table, row, 0);
 
             if (name != null && !name.isEmpty() && ".".equals(name.substring(name.length() - 1))) {
                 name = name.substring(0, name.length() - 1);
             }
 
-            String value = SwingComponentEventCreator.readText(table, row, 1).replace(":", "")
-                    .trim();
+            String value = SwingComponentEventCreator.readText(table, row, 1);
 
-            StringProperty rowProperty = PropertyHelper.createStringProperty(name, value);
+            TextProperty rowProperty = PropertyHelper.createTextProperty(name, value);
             this.propertyList.add(rowProperty);
         }
     }
@@ -268,13 +265,13 @@ class HierarchicalSwingTableMapper implements SwingTableMapper {
                     newProperty.getPropertyList().addAll((oldProperty).getPropertyList());
                     newProperties.add(newProperty);
                 }
-            } else if (value instanceof StringProperty) {
+            } else if (value instanceof TextProperty) {
 
-                StringProperty oldProperty = (StringProperty) value;
+                TextProperty oldProperty = (TextProperty) value;
 
                 if (key.startsWith("..")) {
                     removeKeys.add(key);
-                    StringProperty newProperty = PropertyHelper.createStringProperty(oldProperty.getName().getValue().replace(
+                    TextProperty newProperty = PropertyHelper.createTextProperty(oldProperty.getName().getValue().replace(
                             ".", ""), (oldProperty).getValue().getValue());
 
                     newProperties.add(newProperty);

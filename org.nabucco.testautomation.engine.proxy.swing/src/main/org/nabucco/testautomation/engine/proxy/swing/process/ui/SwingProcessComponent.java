@@ -21,8 +21,7 @@ import java.util.List;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReply;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
@@ -30,7 +29,7 @@ import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
  * 
  * @author Nicolas Moser, PRODYNA AG
  */
-public interface SwingProcessComponent extends Serializable {
+public interface SwingProcessComponent extends Serializable, SwingProperties {
 
     /**
      * Executes an action on a particular {@link SwingProcessComponent} instance.
@@ -42,7 +41,7 @@ public interface SwingProcessComponent extends Serializable {
      * @param actionType
      *            the type of action to execute.
      */
-    void execute(PropertyList propertyList, List<Metadata> metadataList,
+    void execute(PropertyList propertyList, Metadata metadata,
             SwingActionType actionType);
 
     /**

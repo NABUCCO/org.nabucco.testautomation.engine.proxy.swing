@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 PRODYNA AG
+ * Copyright 2012 PRODYNA AG
  *
  * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,36 +18,30 @@ package org.nabucco.testautomation.engine.proxy.swing.ui;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
-import org.nabucco.testautomation.engine.proxy.swing.SwingTab;
+import org.nabucco.testautomation.engine.proxy.swing.SwingLabel;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunication;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
-import org.nabucco.testautomation.property.facade.datatype.base.PropertyType;
+
 
 /**
- * SwingTabImpl
+ * SwingLabelImpl
  * 
- * @author Nicolas Moser, PRODYNA AG
+ * @author Florian Schmidt, PRODYNA AG
  */
-class SwingTabImpl extends AbstractSwingComponent implements SwingTab {
+public class SwingLabelImpl extends AbstractSwingComponent implements SwingLabel{
 
-	private static final long	serialVersionUID	= 4235132484765531914L;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= -6687735661209000120L;
 
-	public SwingTabImpl(ProcessCommunication communication) {
-		super(communication, SwingEngineOperationType.SWING_TAB);
+	public SwingLabelImpl(ProcessCommunication communication) {
+		super(communication, SwingEngineOperationType.SWING_LABEL);
 	}
 
 	@Override
 	protected void defineConstraints(SwingComponentConstraints constraints, SwingActionType actionType) {
-		constraints.actions(SwingActionType.LEFTCLICK, SwingActionType.RIGHTCLICK, SwingActionType.READ, SwingActionType.IS_AVAILABLE);
-		switch (actionType) {
-			case IS_AVAILABLE:
-				break;
-			case READ:
-				constraints.properties(PropertyType.NUMERIC, PropertyType.TEXT);
-				break;
-			default:
-				constraints.properties(PropertyType.NUMERIC);
-				break;
-		}
+		constraints.actions(SwingActionType.IS_AVAILABLE, SwingActionType.READ);
 	}
+	
 }

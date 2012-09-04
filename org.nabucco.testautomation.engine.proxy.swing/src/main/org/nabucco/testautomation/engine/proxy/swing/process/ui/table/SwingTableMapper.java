@@ -17,8 +17,7 @@
 package org.nabucco.testautomation.engine.proxy.swing.process.ui.table;
 
 import org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessInvocationException;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 
 /**
  * SwingTableMapper

@@ -22,8 +22,7 @@ import java.util.List;
 import org.nabucco.testautomation.engine.base.context.TestContext;
 import org.nabucco.testautomation.engine.proxy.SubEngineActionType;
 import org.nabucco.testautomation.engine.proxy.exception.SubEngineException;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.result.facade.datatype.ActionResponse;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 

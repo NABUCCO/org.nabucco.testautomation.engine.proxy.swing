@@ -22,8 +22,7 @@ import java.io.OutputStream;
 import org.apache.log4j.Level;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunicationConstants;
 import org.nabucco.testautomation.engine.proxy.swing.process.ser.CommandAndReplySerializer;
-
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
+import org.nabucco.testautomation.property.facade.datatype.base.Property;
 
 /**
  * Replies {@link CommandReply} instances to the given output stream.

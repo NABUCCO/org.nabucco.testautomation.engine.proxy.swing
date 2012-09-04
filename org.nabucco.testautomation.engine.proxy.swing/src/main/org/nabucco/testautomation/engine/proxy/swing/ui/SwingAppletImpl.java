@@ -19,9 +19,9 @@ package org.nabucco.testautomation.engine.proxy.swing.ui;
 import java.net.URL;
 import java.util.List;
 
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.base.context.TestContext;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
 import org.nabucco.testautomation.engine.base.util.TestResultHelper;
 import org.nabucco.testautomation.engine.proxy.SubEngineActionType;
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
@@ -29,10 +29,13 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingApplet;
 import org.nabucco.testautomation.engine.proxy.swing.SwingButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingCheckbox;
 import org.nabucco.testautomation.engine.proxy.swing.SwingComboBox;
+import org.nabucco.testautomation.engine.proxy.swing.SwingJComponent;
 import org.nabucco.testautomation.engine.proxy.swing.SwingDialog;
 import org.nabucco.testautomation.engine.proxy.swing.SwingFrame;
+import org.nabucco.testautomation.engine.proxy.swing.SwingLabel;
 import org.nabucco.testautomation.engine.proxy.swing.SwingMenu;
 import org.nabucco.testautomation.engine.proxy.swing.SwingPassword;
+import org.nabucco.testautomation.engine.proxy.swing.SwingPrint;
 import org.nabucco.testautomation.engine.proxy.swing.SwingRadioButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTab;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTable;
@@ -45,9 +48,8 @@ import org.nabucco.testautomation.engine.proxy.swing.process.command.ExitCommand
 import org.nabucco.testautomation.engine.proxy.swing.process.command.InitCommand;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReply;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReplyEvaluator;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.StringProperty;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.TextProperty;
 import org.nabucco.testautomation.result.facade.datatype.ActionResponse;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
@@ -61,7 +63,7 @@ public class SwingAppletImpl implements SwingApplet {
 
     private static final String APPLET_LAUNCHER = "org.nabucco.testautomation.engine.proxy.swing.process.applet.AppletLauncher";
 
-	private static NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+	private static NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             SwingAppletImpl.class);
 
     private static final long serialVersionUID = 1L;
@@ -94,9 +96,15 @@ public class SwingAppletImpl implements SwingApplet {
 
     private SwingTree swingTree;
 
+    private SwingPrint swingPrint;
+
+    private SwingJComponent swingComponent;
+
     private SwingMenu swingMenu;
 
     private SwingComboBox swingComboBox;
+    
+    private SwingLabel swingLabel;
 
     /**
      * Creates a new SwingApplet instance
@@ -150,7 +158,7 @@ public class SwingAppletImpl implements SwingApplet {
         		return result;
         	}
         	
-        	StringProperty applicationProperty = (StringProperty) metadataList.get(0).getPropertyList().getPropertyList().get(0).getProperty();
+        	TextProperty applicationProperty = (TextProperty) metadataList.get(0).getPropertyList().getPropertyList().get(0).getProperty();
             startApplet(applicationProperty.getValue().getValue());
             break;
 
@@ -248,8 +256,11 @@ public class SwingAppletImpl implements SwingApplet {
         this.swingTab = scf.createSwingTab(communication);
         this.swingTextInput = scf.createSwingTextInput(communication);
         this.swingTree = scf.createSwingTree(communication);
+        this.swingPrint = scf.createSwingPrint(communication);
+        this.swingComponent = scf.createSwingComponent(communication);
         this.swingMenu = scf.createSwingMenu(communication);
         this.swingComboBox = scf.createSwingComboBox(communication);
+        this.swingLabel = scf.createSwingLabel(communication);
     }
     
     private void destroyComponents() {
@@ -264,8 +275,11 @@ public class SwingAppletImpl implements SwingApplet {
         this.swingTab = null;
         this.swingTextInput = null;
         this.swingTree = null;
+        this.swingPrint = null;
+        this.swingComponent = null;
         this.swingMenu = null;
         this.swingComboBox = null;
+        this.swingLabel = null;
     }
 
     public SwingButton getSwingButton() {
@@ -315,5 +329,17 @@ public class SwingAppletImpl implements SwingApplet {
     public SwingComboBox getSwingComboBox() {
         return swingComboBox;
     }
+
+	public SwingPrint getSwingPrint() {
+		return swingPrint;
+	}
+
+	public SwingJComponent getSwingComponent() {
+		return swingComponent;
+	}
+	
+	public SwingLabel getSwingLabel() {
+		return swingLabel;
+	}
 
 }

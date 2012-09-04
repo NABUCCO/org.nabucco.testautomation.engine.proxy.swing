@@ -66,7 +66,7 @@ class ClientHandlerImpl implements ClientHandler {
         SwingProcessComponent component = SwingProcessComponentFactory.getInstance()
                 .getSwingProcessComponent(exec.getComponentType());
 
-        component.execute(exec.getPropertyList(), exec.getMetadataList(), exec.getActionType());
+        component.execute(exec.getPropertyList(), exec.getMetadata(), exec.getActionType());
 
         return component.getReplyList();
     }

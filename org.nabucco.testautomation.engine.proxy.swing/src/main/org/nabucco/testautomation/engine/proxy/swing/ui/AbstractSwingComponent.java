@@ -19,12 +19,9 @@ package org.nabucco.testautomation.engine.proxy.swing.ui;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.bind.PropertyException;
-
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.base.context.TestContext;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
-import org.nabucco.testautomation.engine.base.util.PropertyHelper;
 import org.nabucco.testautomation.engine.base.util.TestResultHelper;
 import org.nabucco.testautomation.engine.proxy.SubEngineActionType;
 import org.nabucco.testautomation.engine.proxy.exception.SubEngineException;
@@ -46,13 +43,13 @@ import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunicatio
 import org.nabucco.testautomation.engine.proxy.swing.process.command.ExecutionCommand;
 import org.nabucco.testautomation.engine.proxy.swing.process.command.ProcessCommandType;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReplyEvaluator;
+import org.nabucco.testautomation.engine.proxy.swing.process.ui.SwingProperties;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
-import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentValidator;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingValidationException;
-
-import org.nabucco.testautomation.facade.datatype.property.IntegerProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
+import org.nabucco.testautomation.property.facade.datatype.NumericProperty;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.base.Property;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.result.facade.datatype.ActionResponse;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
@@ -75,7 +72,7 @@ import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
  * 
  * @author Nicolas Moser, PRODYNA AG
  */
-abstract class AbstractSwingComponent implements SwingEngineOperation, Serializable {
+abstract class AbstractSwingComponent implements SwingEngineOperation, SwingProperties, Serializable {
 
     /* Constants */
     private static final long serialVersionUID = 1L;
@@ -89,7 +86,7 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
     private static final int DEFAULT_WAIT_TIME = 1000;
 
     /* Static fields */
-    private static NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             AbstractSwingComponent.class);
 
     /* Instance fields */
@@ -136,16 +133,17 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
             metadata = metadataList.get(metadataList.size() - 1);
             this.initResult(context, metadata, actionType);
 
-            this.validateComponent(propertyList, swingAction);
+//            this.validateComponent(propertyList, swingAction);
 
             // Execute Command
-            ExecutionCommand command = createCommand(propertyList, metadataList, swingAction);
+            ExecutionCommand command = createCommand(propertyList, metadata, swingAction);
             Integer timeout = getTimeout(metadata, swingAction);
             Property reply = executeCommand(context, command, timeout);
 
-            if ((swingAction == SwingActionType.READ || swingAction == SwingActionType.IS_AVAILABLE) && reply != null) {
-                this.storeReadProperty(propertyList, reply);
-                result.setReturnProperties(propertyList);
+            if (reply != null) {
+            	PropertyList returnList = PropertyHelper.createPropertyList("Return");
+            	PropertyHelper.add(reply, returnList);
+                result.setReturnProperties(returnList);
             }
 
         } catch (SwingValidationException e) {
@@ -167,20 +165,6 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
      */
     protected abstract void defineConstraints(SwingComponentConstraints constraints,
             SwingActionType actionType);
-
-    /**
-     * Inserts a read property into the property list.
-     * 
-     * @param propertyList
-     *            the list of properties
-     * @param readProperty
-     *            the property read from execution
-     * 
-     * @throws PropertyException
-     *             if the properties are not valid
-     */
-    protected abstract void storeReadProperty(PropertyList propertyList, Property readProperty)
-            throws PropertyException;
 
     /**
      * Validates the input arguments.
@@ -218,26 +202,26 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
         }
     }
 
-    /**
-     * Validates a Swing Component for properties and action type.
-     * 
-     * @param propertyList
-     *            the list of properties
-     * @param actionType
-     *            the type of action
-     * 
-     * @throws SwingValidationException
-     *             if a component is not valid
-     */
-    private void validateComponent(PropertyList properties, SwingActionType actionType)
-            throws SwingValidationException {
-        SwingComponentConstraints constraints = new SwingComponentConstraints(this.type);
-
-        this.defineConstraints(constraints, actionType);
-
-        SwingComponentValidator validator = constraints.buildValidator();
-        validator.validate(properties, actionType);
-    }
+//    /**
+//     * Validates a Swing Component for properties and action type.
+//     * 
+//     * @param propertyList
+//     *            the list of properties
+//     * @param actionType
+//     *            the type of action
+//     * 
+//     * @throws SwingValidationException
+//     *             if a component is not valid
+//     */
+//    private void validateComponent(PropertyList properties, SwingActionType actionType)
+//            throws SwingValidationException {
+//        SwingComponentConstraints constraints = new SwingComponentConstraints(this.type);
+//
+//        this.defineConstraints(constraints, actionType);
+//
+//        SwingComponentValidator validator = constraints.buildValidator();
+//        validator.validate(properties, actionType);
+//    }
 
     /**
      * Extracts the timeout time for the current action on the {@link Metadata} component.
@@ -251,36 +235,33 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
      */
     private Integer getTimeout(Metadata metadata, SwingActionType actionType) {
 
-        IntegerProperty property = null;
+        NumericProperty property = null;
 
         try {
             switch (actionType) {
             case LEFTCLICK:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
                 break;
             case RIGHTCLICK:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
                 break;
             case DOUBLECLICK:
-            	property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
+            	property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
             	break;
-            case SELECT:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
-                break;
             case FIND:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_CLICK);
                 break;
             case ENTER:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_ENTER);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_ENTER);
                 break;
             case READ:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
                 break;
             case COUNT:
-                property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
+                property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
                 break;
             case IS_AVAILABLE:
-            	property = (IntegerProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
+            	property = (NumericProperty) PropertyHelper.getFromList(metadata.getPropertyList(), WAIT_READ);
                 break;
             }
 
@@ -289,7 +270,7 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
                     ", using DEFAULT.");
         }
 
-        Integer waitTime = property != null ? property.getValue().getValue() : DEFAULT_WAIT_TIME;
+        Integer waitTime = property != null ? property.getValue().getValue().intValue() : DEFAULT_WAIT_TIME;
 
         return waitTime;
     }
@@ -299,20 +280,20 @@ abstract class AbstractSwingComponent implements SwingEngineOperation, Serializa
      * 
      * @param propertyList
      *            the list of properties for the command
-     * @param metadataList
-     *            the list of metadata for the command
+     * @param metadata
+     *            the metadata for the command
      * @param actionType
      *            the action type for the command
      * 
      * @return the prepared command
      */
     private ExecutionCommand createCommand(PropertyList propertyList,
-            List<Metadata> metadataList, SwingActionType actionType) {
+            Metadata metadata, SwingActionType actionType) {
 
         ExecutionCommand command = new ExecutionCommand();
         command.setActionType(actionType);
         command.setComponentType(type);
-        command.getMetadataList().addAll(metadataList);
+        command.setMetadata(metadata);
         command.setPropertyList(propertyList);
         return command;
     }

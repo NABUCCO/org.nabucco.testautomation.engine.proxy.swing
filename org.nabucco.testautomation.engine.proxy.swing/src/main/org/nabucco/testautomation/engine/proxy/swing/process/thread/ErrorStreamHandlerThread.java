@@ -20,8 +20,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 
 
 /**
@@ -31,7 +31,7 @@ import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
  */
 public class ErrorStreamHandlerThread extends Thread {
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             ErrorStreamHandlerThread.class);
 
     BufferedReader reader;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 PRODYNA AG
+ * Copyright 2012 PRODYNA AG
  *
  * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,37 +17,45 @@
 package org.nabucco.testautomation.engine.proxy.swing.ui;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
+import org.nabucco.testautomation.engine.proxy.swing.SwingJComponent;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
-import org.nabucco.testautomation.engine.proxy.swing.SwingTab;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunication;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
 import org.nabucco.testautomation.property.facade.datatype.base.PropertyType;
 
+
 /**
- * SwingTabImpl
+ * SwingComponentImpl
  * 
- * @author Nicolas Moser, PRODYNA AG
+ * @author Florian Schmidt, PRODYNA AG
  */
-class SwingTabImpl extends AbstractSwingComponent implements SwingTab {
+public class SwingJComponentImpl extends AbstractSwingComponent implements SwingJComponent {
 
-	private static final long	serialVersionUID	= 4235132484765531914L;
-
-	public SwingTabImpl(ProcessCommunication communication) {
-		super(communication, SwingEngineOperationType.SWING_TAB);
+	/**
+	 * Creates a new {@link SwingJComponentImpl} instance.
+	 *
+	 * @param communication
+	 * @param type
+	 */
+	public SwingJComponentImpl(ProcessCommunication communication) {
+		super(communication, SwingEngineOperationType.SWING_COMPONENT);
 	}
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= -7986497644110075558L;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void defineConstraints(SwingComponentConstraints constraints, SwingActionType actionType) {
-		constraints.actions(SwingActionType.LEFTCLICK, SwingActionType.RIGHTCLICK, SwingActionType.READ, SwingActionType.IS_AVAILABLE);
-		switch (actionType) {
-			case IS_AVAILABLE:
-				break;
-			case READ:
-				constraints.properties(PropertyType.NUMERIC, PropertyType.TEXT);
-				break;
-			default:
-				constraints.properties(PropertyType.NUMERIC);
-				break;
-		}
+		constraints.actions(SwingActionType.READPROPERTY, SwingActionType.READ, SwingActionType.IS_AVAILABLE);
+    	switch (actionType) {
+    	case READPROPERTY:
+    		constraints.properties(PropertyType.TEXT);
+    		break;
+    	}
 	}
 }

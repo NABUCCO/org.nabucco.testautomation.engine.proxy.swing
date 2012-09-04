@@ -24,10 +24,9 @@ import javax.swing.JTree;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.nabucco.testautomation.engine.base.util.PropertyHelper;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessInvocationException;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 
 /**
  * TreeTableMapper
@@ -69,7 +68,7 @@ public class TreeTableMapper implements SwingTableMapper {
                     tree = (JTree) component;
                 }
 
-                PropertyHelper.add(PropertyHelper.createStringProperty(String.valueOf(col), value == null ? "" : value
+                PropertyHelper.add(PropertyHelper.createTextProperty(String.valueOf(col), value == null ? "" : value
                         .toString()), rowList);
             }
             PropertyHelper.add(rowList, propertyList);
@@ -117,7 +116,7 @@ public class TreeTableMapper implements SwingTableMapper {
                 }
 
                 PropertyList rowProperty = (PropertyList) parentList.getPropertyList().get(row).getProperty();
-                PropertyHelper.add(PropertyHelper.createStringProperty(String.valueOf(col), value == null ? "" : value.toString()), rowProperty);
+                PropertyHelper.add(PropertyHelper.createTextProperty(String.valueOf(col), value == null ? "" : value.toString()), rowProperty);
             } catch (Exception e) {
                 throw new ProcessInvocationException(
                         "Error retrieving swing tree table node labels.", e);

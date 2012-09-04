@@ -21,10 +21,13 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingApplication;
 import org.nabucco.testautomation.engine.proxy.swing.SwingButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingCheckbox;
 import org.nabucco.testautomation.engine.proxy.swing.SwingComboBox;
+import org.nabucco.testautomation.engine.proxy.swing.SwingJComponent;
 import org.nabucco.testautomation.engine.proxy.swing.SwingDialog;
 import org.nabucco.testautomation.engine.proxy.swing.SwingFrame;
+import org.nabucco.testautomation.engine.proxy.swing.SwingLabel;
 import org.nabucco.testautomation.engine.proxy.swing.SwingMenu;
 import org.nabucco.testautomation.engine.proxy.swing.SwingPassword;
+import org.nabucco.testautomation.engine.proxy.swing.SwingPrint;
 import org.nabucco.testautomation.engine.proxy.swing.SwingRadioButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTab;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTable;
@@ -181,6 +184,42 @@ public class SwingComponentFactory {
     public SwingTree createSwingTree(ProcessCommunication communication) {
         return new SwingTreeImpl(communication);
     }
+    
+    /**
+     * Creates a new {@link SwingPrint} instance.
+     * 
+     * @param communication
+     *            the process communication
+     * 
+     * @return the instance.
+     */
+    public SwingPrint createSwingPrint(ProcessCommunication communication) {
+    	return new SwingPrintImpl(communication);
+    }
+    
+    /**
+     * Creates a new {@link SwingJComponent} instance.
+     * 
+     * @param communication
+     *            the process communication
+     * 
+     * @return the instance.
+     */
+    public SwingJComponent createComponent(ProcessCommunication communication) {
+    	return new SwingJComponentImpl(communication);
+    }
+    
+    /**
+     * Creates a new {@link SwingJComponent} instance.
+     * 
+     * @param communication
+     *            the process communication
+     * 
+     * @return the instance.
+     */
+    public SwingLabel createLabel(ProcessCommunication communication) {
+    	return new SwingLabelImpl(communication);
+    }
 
     /**
      * Creates a new {@link SwingTable} instance.
@@ -228,6 +267,30 @@ public class SwingComponentFactory {
      */
     public SwingComboBox createSwingComboBox(ProcessCommunication communication) {
         return new SwingComboBoxImpl(communication);
+    }
+    
+    /**
+     * Creates a new {@link SwingJComponent} instance.
+     * 
+     * @param communication
+     *            the process communication
+     * 
+     * @return the instance
+     */
+    public SwingJComponent createSwingComponent(ProcessCommunication communication) {
+    	return new SwingJComponentImpl(communication);
+    }
+    
+    /**
+     * Creates a new {@link SwingLabel} instance.
+     * 
+     * @param communication
+     *            the process communication
+     * 
+     * @return the instance
+     */
+    public SwingLabel createSwingLabel(ProcessCommunication communication) {
+    	return new SwingLabelImpl(communication);
     }
 
 }

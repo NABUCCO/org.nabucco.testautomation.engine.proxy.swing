@@ -16,13 +16,9 @@
 */
 package org.nabucco.testautomation.engine.proxy.swing.process.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
@@ -35,7 +31,7 @@ public class ExecutionCommand extends ProcessCommandSupport implements ProcessCo
 
     private static final long serialVersionUID = 1L;
 
-    private List<Metadata> metadataList;
+    private Metadata metadata;
 
     private PropertyList propertyList;
 
@@ -83,12 +79,12 @@ public class ExecutionCommand extends ProcessCommandSupport implements ProcessCo
     /**
      * @return the metadataList
      */
-    public List<Metadata> getMetadataList() {
-        if (metadataList == null) {
-            metadataList = new ArrayList<Metadata>();
-        }
-
-        return metadataList;
+    public Metadata getMetadata() {
+        return metadata;
+    }
+    
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     /**
@@ -111,8 +107,7 @@ public class ExecutionCommand extends ProcessCommandSupport implements ProcessCo
 
     @Override
     public String toString() {
-    	List<Metadata> list = getMetadataList();
-		String actionTargetString = list.isEmpty() ? "" : " on " + list.get(list.size() - 1).getId();
+		String actionTargetString = metadata == null ? "" : " on " + metadata.getId();
     	return super.toString() + " Action " + getActionType() + actionTargetString;
     }
 }

@@ -1,19 +1,19 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2010 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco-source.org/nabucco-license.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.engine.proxy.swing.ui;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
@@ -22,11 +22,6 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingFrame;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunication;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
 
-import org.nabucco.testautomation.facade.datatype.property.BooleanProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
-import org.nabucco.testautomation.facade.datatype.property.base.PropertyType;
-
 /**
  * SwingFrameImpl
  * 
@@ -34,24 +29,14 @@ import org.nabucco.testautomation.facade.datatype.property.base.PropertyType;
  */
 class SwingFrameImpl extends AbstractSwingComponent implements SwingFrame {
 
-    private static final long serialVersionUID = 8069406842479920767L;
+	private static final long	serialVersionUID	= 8069406842479920767L;
 
-    public SwingFrameImpl(ProcessCommunication communication) {
-        super(communication, SwingEngineOperationType.SWING_FRAME);
-    }
+	public SwingFrameImpl(ProcessCommunication communication) {
+		super(communication, SwingEngineOperationType.SWING_FRAME);
+	}
 
-    @Override
-    protected void defineConstraints(SwingComponentConstraints constraints,
-            SwingActionType actionType) {
-
-        constraints.actions(SwingActionType.IS_AVAILABLE);
-        constraints.properties(PropertyType.BOOLEAN);
-    }
-
-    @Override
-    public void storeReadProperty(PropertyList propertyList, Property readProperty) {
-    	BooleanProperty property = (BooleanProperty) propertyList.getPropertyList().get(0).getProperty();
-        property.setValue(((BooleanProperty) readProperty).getValue());
-    }
-
+	@Override
+	protected void defineConstraints(SwingComponentConstraints constraints, SwingActionType actionType) {
+		constraints.actions(SwingActionType.IS_AVAILABLE);
+	}
 }

@@ -18,26 +18,22 @@ package org.nabucco.testautomation.engine.proxy.swing;
 
 import java.io.File;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.base.util.FileUtils;
 import org.nabucco.testautomation.engine.proxy.SubEngine;
 import org.nabucco.testautomation.engine.proxy.base.AbstractProxyEngine;
 import org.nabucco.testautomation.engine.proxy.config.ProxyEngineConfiguration;
 import org.nabucco.testautomation.engine.proxy.exception.ProxyConfigurationException;
 import org.nabucco.testautomation.engine.proxy.exception.SubEngineException;
-import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
-import org.nabucco.testautomation.engine.proxy.swing.SwingApplet;
-import org.nabucco.testautomation.engine.proxy.swing.SwingApplication;
 import org.nabucco.testautomation.engine.proxy.swing.config.SwingProxyConfigImpl;
 import org.nabucco.testautomation.engine.proxy.swing.config.SwingProxyConfiguration;
 import org.nabucco.testautomation.engine.proxy.swing.process.JavaProcess;
 import org.nabucco.testautomation.engine.proxy.swing.ui.SwingAppletImpl;
 import org.nabucco.testautomation.engine.proxy.swing.ui.SwingApplicationImpl;
 import org.nabucco.testautomation.engine.proxy.swing.ui.SwingComponentFactory;
-
-import org.nabucco.testautomation.facade.datatype.engine.SubEngineType;
-import org.nabucco.testautomation.facade.datatype.engine.proxy.ProxyConfiguration;
+import org.nabucco.testautomation.settings.facade.datatype.engine.SubEngineType;
+import org.nabucco.testautomation.settings.facade.datatype.engine.proxy.ProxyConfiguration;
 
 /**
  * SwingProxyEngineImpl
@@ -47,7 +43,7 @@ import org.nabucco.testautomation.facade.datatype.engine.proxy.ProxyConfiguratio
  */
 public class SwingProxyEngineImpl extends AbstractProxyEngine {
 
-	private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+	private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
 			SwingProxyEngineImpl.class);
 	
 	private SwingApplet swingApplet;
@@ -84,6 +80,7 @@ public class SwingProxyEngineImpl extends AbstractProxyEngine {
             for (File runtimeLib : getProxySupport().getRuntimeLibs()) {
             	this.applicationConfiguration.addRuntimeLib(FileUtils.toURL(runtimeLib));
             }
+            logger.info("SwingProxyEngine configured");
         } catch (Exception ex) {
         	throw new ProxyConfigurationException("Could not configure SwingProxyEngine", ex);
         }
@@ -94,12 +91,16 @@ public class SwingProxyEngineImpl extends AbstractProxyEngine {
      */
 	@Override
 	public SubEngine start() throws ProxyConfigurationException {
-		JavaProcess process = new JavaProcess(this.applicationConfiguration.getPort(), this.applicationConfiguration.getDebugPort());
+		logger.info("Starting SwingProxyEngine ...");
+		JavaProcess process = new JavaProcess(this.applicationConfiguration.getStartPort(), this.applicationConfiguration.getEndPort(), this.applicationConfiguration.getDebugPort());
 		this.swingApplication = (SwingApplicationImpl) SwingComponentFactory
 				.getInstance().createSwingApplication(process, this.applicationConfiguration);
 		this.swingApplet = (SwingAppletImpl) SwingComponentFactory
 				.getInstance().createSwingApplet(process, this.applicationConfiguration);
-		return new SwingSubEngineImpl(this.swingApplication, this.swingApplet);
+		SubEngine subEngine = null;
+		subEngine = new SwingSubEngineImpl(this.swingApplication, this.swingApplet);
+		logger.info("SwingSubEngine created");
+		return subEngine;
 	}
 
 	/**
@@ -107,18 +108,20 @@ public class SwingProxyEngineImpl extends AbstractProxyEngine {
      */
 	@Override
 	public void stop() throws ProxyConfigurationException {
+		
 		if (swingApplication != null) {
             try {
 				swingApplication.execute(null, null, null, SwingActionType.STOP);
 			} catch (SubEngineException ex) {
-				throw new ProxyConfigurationException("Could not stop SwingProxyEngine",ex);
+				throw new ProxyConfigurationException("Could not stop SwingProxyEngine", ex);
 			}
         } 
+		
 		if (swingApplet != null) {
             try {
 				swingApplet.execute(null, null, null, SwingActionType.STOP);
 			} catch (SubEngineException ex) {
-				throw new ProxyConfigurationException("Could not stop SwingProxyEngine",ex);
+				throw new ProxyConfigurationException("Could not stop SwingProxyEngine", ex);
 			}
         }
 	}

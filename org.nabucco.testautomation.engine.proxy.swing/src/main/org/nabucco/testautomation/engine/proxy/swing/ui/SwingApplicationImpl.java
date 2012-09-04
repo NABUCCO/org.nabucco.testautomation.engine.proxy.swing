@@ -19,9 +19,9 @@ package org.nabucco.testautomation.engine.proxy.swing.ui;
 import java.net.URL;
 import java.util.List;
 
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.base.context.TestContext;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
 import org.nabucco.testautomation.engine.base.util.TestResultHelper;
 import org.nabucco.testautomation.engine.proxy.SubEngineActionType;
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
@@ -29,10 +29,13 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingApplication;
 import org.nabucco.testautomation.engine.proxy.swing.SwingButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingCheckbox;
 import org.nabucco.testautomation.engine.proxy.swing.SwingComboBox;
+import org.nabucco.testautomation.engine.proxy.swing.SwingJComponent;
 import org.nabucco.testautomation.engine.proxy.swing.SwingDialog;
 import org.nabucco.testautomation.engine.proxy.swing.SwingFrame;
+import org.nabucco.testautomation.engine.proxy.swing.SwingLabel;
 import org.nabucco.testautomation.engine.proxy.swing.SwingMenu;
 import org.nabucco.testautomation.engine.proxy.swing.SwingPassword;
+import org.nabucco.testautomation.engine.proxy.swing.SwingPrint;
 import org.nabucco.testautomation.engine.proxy.swing.SwingRadioButton;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTab;
 import org.nabucco.testautomation.engine.proxy.swing.SwingTable;
@@ -45,9 +48,8 @@ import org.nabucco.testautomation.engine.proxy.swing.process.command.ExitCommand
 import org.nabucco.testautomation.engine.proxy.swing.process.command.InitCommand;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReply;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReplyEvaluator;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.StringProperty;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.TextProperty;
 import org.nabucco.testautomation.result.facade.datatype.ActionResponse;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
@@ -59,7 +61,7 @@ import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
  */
 public class SwingApplicationImpl implements SwingApplication {
 
-    private static NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             SwingApplicationImpl.class);
 
     private static final long serialVersionUID = 1L;
@@ -91,10 +93,16 @@ public class SwingApplicationImpl implements SwingApplication {
     private SwingTextInput swingTextInput;
 
     private SwingTree swingTree;
+    
+    private SwingPrint swingPrint;
+    
+    private SwingLabel swingLabel;
 
     private SwingMenu swingMenu;
 
     private SwingComboBox swingComboBox;
+
+    private SwingJComponent swingComponent;
 
     /**
      * Creates a new Swing application instance
@@ -149,7 +157,7 @@ public class SwingApplicationImpl implements SwingApplication {
         		return result;
         	}
         	
-        	StringProperty applicationProperty = (StringProperty) metadataList.get(0).getPropertyList().getPropertyList().get(0).getProperty();
+        	TextProperty applicationProperty = (TextProperty) metadataList.get(0).getPropertyList().getPropertyList().get(0).getProperty();
             startApplication(applicationProperty.getValue().getValue());
             break;
 
@@ -188,12 +196,15 @@ public class SwingApplicationImpl implements SwingApplication {
         	List<URL> classpathUrls = config.getClassloaderURLs(applicationName);
         	String classpath = process.prepareClasspath(classpathUrls);
         	String mainClass = config.getMainClass(applicationName);
+        	String[] args = config.getArguments(applicationName);
             
         	communication = process.startJavaProcess(classpath);
 
             InitCommand command = new InitCommand();
             command.setClassName(mainClass);
-            // TODO command.setArguments(null);
+            if(args != null) {
+            	command.setArguments(args);
+            }
 
             List<CommandReply> replyList = communication.executeCommand(command);
             CommandReplyEvaluator.getInstance().evaluateReply(replyList, null);
@@ -242,8 +253,11 @@ public class SwingApplicationImpl implements SwingApplication {
         this.swingTab = scf.createSwingTab(communication);
         this.swingTextInput = scf.createSwingTextInput(communication);
         this.swingTree = scf.createSwingTree(communication);
+        this.swingPrint = scf.createSwingPrint(communication);
+        this.swingLabel = scf.createSwingLabel(communication);
         this.swingMenu = scf.createSwingMenu(communication);
         this.swingComboBox = scf.createSwingComboBox(communication);
+        this.swingComponent = scf.createSwingComponent(communication);
     }
     
     private void destroyComponents() {
@@ -258,8 +272,11 @@ public class SwingApplicationImpl implements SwingApplication {
         this.swingTab = null;
         this.swingTextInput = null;
         this.swingTree = null;
+        this.swingPrint = null;
+        this.swingLabel = null;
         this.swingMenu = null;
         this.swingComboBox = null;
+        this.swingComponent = null;
     }
 
     public SwingButton getSwingButton() {
@@ -301,6 +318,10 @@ public class SwingApplicationImpl implements SwingApplication {
     public SwingTree getSwingTree() {
         return swingTree;
     }
+    
+    public SwingPrint getSwingPrint() {
+    	return swingPrint;
+    }
 
     public SwingMenu getSwingMenu() {
         return swingMenu;
@@ -309,4 +330,12 @@ public class SwingApplicationImpl implements SwingApplication {
     public SwingComboBox getSwingComboBox() {
         return swingComboBox;
     }
+    
+    public SwingJComponent getSwingComponent() {
+    	return swingComponent;
+    }
+
+	public SwingLabel getSwingLabel() {
+		return swingLabel;
+	}
 }

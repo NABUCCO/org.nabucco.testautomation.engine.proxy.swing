@@ -17,14 +17,14 @@
 package org.nabucco.testautomation.engine.proxy.swing.process.ui;
 
 import java.awt.Component;
-import java.util.List;
 
 import javax.swing.JFrame;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
-
-import org.nabucco.testautomation.facade.datatype.property.BooleanProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.engine.proxy.swing.process.ui.finder.MultipleEntriesFoundException;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.TextProperty;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
@@ -38,14 +38,33 @@ class SwingProcessFrame extends SwingProcessComponentSupport implements SwingPro
 
 	@Override
 	public void internalExecute(PropertyList propertyList,
-			List<Metadata> metadataList, SwingActionType actionType) {
+			Metadata metadata, SwingActionType actionType) {
 
-		BooleanProperty prop = (BooleanProperty) propertyList.getPropertyList().get(0).getProperty();
-
+		Component component = null;
 		switch (actionType) {
 
 		case IS_AVAILABLE:
-			checkAvailability(metadataList, prop);
+			checkAvailability(propertyList, metadata);
+			break;
+		case READPROPERTY:
+			try {
+				component = find(propertyList, metadata);
+			} catch (MultipleEntriesFoundException e) {
+				this.failure("More than one Component found.");
+			}
+			TextProperty returnValue = getProperty(component, ((TextProperty) PropertyHelper.getFromList(propertyList, NAME)).getValue().getValue());
+			if (returnValue != null) {
+				this.addProperty(returnValue);
+			}
+			break;
+		case READALLPROPERTIES:
+			try {
+				component = find(propertyList, metadata);
+			} catch (MultipleEntriesFoundException e) {
+				this.failure("More than one Component found.");
+			}
+			PropertyList properties = getProperties(component);
+			this.addProperty(properties);
 			break;
 		}
 
@@ -53,7 +72,7 @@ class SwingProcessFrame extends SwingProcessComponentSupport implements SwingPro
 
     @Override
 	boolean isAvailable(Component component) {
-		return component instanceof JFrame && !((JFrame) component).isVisible();
+		return component instanceof JFrame && ((JFrame) component).isVisible();
 	}
 
 }

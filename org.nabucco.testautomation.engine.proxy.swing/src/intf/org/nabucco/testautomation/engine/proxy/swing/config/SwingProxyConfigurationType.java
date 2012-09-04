@@ -30,29 +30,34 @@ public enum SwingProxyConfigurationType {
     SWING_URL("[$AppName].SWING_URL_[$Index]"),
 
     /**
-     * Constant for the property-key for the swing process URL.
+     * Constant for the property-key for the swing URL.
      */
-    SWING_PROCESS_URL("SWING_PROCESS_URL"),
+    SWING_PARAM("[$AppName].SWING_PARAM_[$Index]"),
 
     /**
-     * Constant for the property-key for the number of swing process URLs.
+     * Constant for the property-key for the swing URL.
      */
-    SWING_PROCESS_URL_COUNT("SWING_PROCESS_URL_COUNT"),
+    SWING_URL_FILE("[$AppName].SWING_URL_FILE"),
 
     /**
      * Constant for the property-key for the swing process port.
      */
-    SWING_PROCESS_PORT("1892"),
+    SWING_PROCESS_PORT_START("1892"),
+    
+    /**
+     * Constant for the property-key for the swing process port.
+     */
+    SWING_PROCESS_PORT_END("1898"),
     
     /**
      * Constant for the property-key for the swing process debugging port.
      */
-    SWING_PROCESS_DEBUG_PORT("1893"),
+    SWING_PROCESS_DEBUG_PORT("1899"),
     
     /**
      * Constant for the property-key for the main class.
      */
-    MAIN_CLASS("MAIN_CLASS");
+    MAIN_CLASS("[$AppName].MAIN_CLASS");
 	
 	private String key;
     

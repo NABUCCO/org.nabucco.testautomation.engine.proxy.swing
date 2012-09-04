@@ -21,12 +21,7 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingComboBox;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunication;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
-
-import org.nabucco.testautomation.facade.datatype.property.BooleanProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.StringProperty;
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
-import org.nabucco.testautomation.facade.datatype.property.base.PropertyType;
+import org.nabucco.testautomation.property.facade.datatype.base.PropertyType;
 
 /**
  * SwingComboBoxImpl
@@ -45,34 +40,17 @@ class SwingComboBoxImpl extends AbstractSwingComponent implements SwingComboBox 
     protected void defineConstraints(SwingComponentConstraints constraints,
             SwingActionType actionType) {
 
-    	constraints.actions(SwingActionType.SELECT, SwingActionType.LEFTCLICK, SwingActionType.READ, SwingActionType.FIND, SwingActionType.IS_AVAILABLE);
+    	constraints.actions(SwingActionType.LEFTCLICK, SwingActionType.READ, SwingActionType.FIND, SwingActionType.IS_AVAILABLE);
 
     	switch (actionType) {
     	case LEFTCLICK:
-    	case SELECT:
-    		constraints.properties(PropertyType.INTEGER);
+    		constraints.properties(PropertyType.NUMERIC);
     		break;
     	case READ:
     	case FIND:
-    		constraints.properties(PropertyType.STRING);
-    		break;
-    	case IS_AVAILABLE:
-    		constraints.properties(PropertyType.BOOLEAN);
-    		break;
+    		constraints.properties(PropertyType.TEXT);
     	}
     	
-    }
-
-    @Override
-    protected void storeReadProperty(PropertyList propertyList, Property readProperty) {
-
-    	Property property = propertyList.getPropertyList().get(0).getProperty();
-    	
-    	if (property.getType() == PropertyType.STRING) {
-    		((StringProperty) property).setValue(((StringProperty) readProperty).getValue());
-    	} else if (property.getType() == PropertyType.BOOLEAN) {
-    		((BooleanProperty) property).setValue(((BooleanProperty) readProperty).getValue());
-    	}
     }
 
 }

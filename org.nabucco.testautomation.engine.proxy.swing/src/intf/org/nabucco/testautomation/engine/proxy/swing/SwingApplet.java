@@ -46,5 +46,11 @@ public interface SwingApplet extends SwingEngineOperation {
 	SwingTextInput getSwingTextInput();
 
 	SwingTree getSwingTree();
+	
+	SwingPrint getSwingPrint();
+
+	SwingJComponent getSwingComponent();
+	
+	SwingLabel getSwingLabel();
 
 }

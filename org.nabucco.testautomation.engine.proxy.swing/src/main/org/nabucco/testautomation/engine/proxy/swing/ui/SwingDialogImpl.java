@@ -21,12 +21,7 @@ import org.nabucco.testautomation.engine.proxy.swing.SwingDialog;
 import org.nabucco.testautomation.engine.proxy.swing.SwingEngineOperationType;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunication;
 import org.nabucco.testautomation.engine.proxy.swing.ui.validator.SwingComponentConstraints;
-
-import org.nabucco.testautomation.facade.datatype.property.BooleanProperty;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.property.StringProperty;
-import org.nabucco.testautomation.facade.datatype.property.base.Property;
-import org.nabucco.testautomation.facade.datatype.property.base.PropertyType;
+import org.nabucco.testautomation.property.facade.datatype.base.PropertyType;
 
 /**
  * SwingDialogImpl
@@ -48,25 +43,9 @@ class SwingDialogImpl extends AbstractSwingComponent implements SwingDialog {
     	constraints.actions(SwingActionType.CLOSE, SwingActionType.READ, SwingActionType.IS_AVAILABLE);
 
     	switch (actionType) {
-    	case IS_AVAILABLE:
-    		constraints.properties(PropertyType.BOOLEAN);
-    		break;
     	case READ:
-    		constraints.properties(PropertyType.STRING);
+    		constraints.properties(PropertyType.TEXT);
     		break;
-    	}
-    }
-
-    @Override
-    public void storeReadProperty(PropertyList propertyList, Property readProperty) {
-
-    	Property property = propertyList.getPropertyList().get(0).getProperty();
-    	
-    	if (property.getType() == PropertyType.BOOLEAN) {
-    		((BooleanProperty) property).setValue(((BooleanProperty) readProperty).getValue());
-    	}
-    	if (property.getType() == PropertyType.STRING) {
-    		((StringProperty) property).setValue(((StringProperty) readProperty).getValue());
     	}
     }
 

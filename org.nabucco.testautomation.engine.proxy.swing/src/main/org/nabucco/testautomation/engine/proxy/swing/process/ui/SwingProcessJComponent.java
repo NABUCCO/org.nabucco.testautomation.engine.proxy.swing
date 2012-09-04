@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 PRODYNA AG
+ * Copyright 2012 PRODYNA AG
  *
  * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,32 @@ package org.nabucco.testautomation.engine.proxy.swing.process.ui;
 
 import java.awt.Component;
 
-import javax.swing.text.JTextComponent;
+import javax.swing.JComponent;
 
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
-import org.nabucco.testautomation.engine.proxy.swing.process.ui.event.SwingComponentEventCreator;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.finder.MultipleEntriesFoundException;
-import org.nabucco.testautomation.property.facade.datatype.NumericProperty;
 import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.property.facade.datatype.TextProperty;
 import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
- * SwingProcessText
+ * SwingProcessJComponent
  * 
- * @author Nicolas Moser, PRODYNA AG
+ * @author Florian Schmidt, PRODYNA AG
  */
-class SwingProcessText extends SwingProcessComponentSupport implements SwingProcessComponent {
+public class SwingProcessJComponent extends SwingProcessComponentSupport {
 
-	private static final long	serialVersionUID	= 1L;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= -3324503299805072874L;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void internalExecute(PropertyList propertyList, Metadata metadata, SwingActionType actionType) {
+	void internalExecute(PropertyList propertyList, Metadata metadata, SwingActionType actionType) {
 		if (actionType == SwingActionType.IS_AVAILABLE) {
 			checkAvailability(propertyList, metadata);
 			return;
@@ -51,24 +55,37 @@ class SwingProcessText extends SwingProcessComponentSupport implements SwingProc
 			this.failure("More than one Component found.");
 		}
 		if (component == null) {
-			this.failure("SwingTextInput not found.");
+			this.failure("Component not found.");
 			return;
 		}
-		if (!(component instanceof JTextComponent)) {
-			this.failure("Component is not of type JTextComponent but " + component.getClass().getName());
-			return;
-		}
-		JTextComponent textField = (JTextComponent) component;
+		
 		switch (actionType) {
-			case ENTER:
-				enterText(textField, ((TextProperty) PropertyHelper.getFromList(propertyList, VALUE)).getValue().getValue());
+			case LEFTCLICK:
+				if (!(component instanceof JComponent)) {
+					this.failure("Component is not of type JComponent but " + component.getClass().getName());
+					return;
+				}
+				if(component instanceof JComponent) {
+					executeLeftClick((JComponent)component);
+				}
 				break;
-			case READ:
-				TextProperty property = PropertyHelper.createTextProperty(CONTENT, readText(textField));
-				this.addProperty(property);
+			case RIGHTCLICK:
+				if (!(component instanceof JComponent)) {
+					this.failure("Component is not of type JComponent but " + component.getClass().getName());
+					return;
+				}
+				if(component instanceof JComponent) {
+					executeRightClick((JComponent)component);
+				}
 				break;
-			case PRESS_KEY:
-				pressKey(textField, ((NumericProperty) PropertyHelper.getFromList(propertyList, KEYCODE)).getValue().getValue().intValue());
+			case DOUBLECLICK:
+				if (!(component instanceof JComponent)) {
+					this.failure("Component is not of type JComponent but " + component.getClass().getName());
+					return;
+				}
+				if(component instanceof JComponent) {
+					executeDoubleClick((JComponent)component);
+				}
 				break;
 			case READPROPERTY:
 				TextProperty returnValue = getProperty(component, ((TextProperty) PropertyHelper.getFromList(propertyList, NAME)).getValue().getValue());
@@ -82,25 +99,12 @@ class SwingProcessText extends SwingProcessComponentSupport implements SwingProc
 				break;
 		}
 	}
-
-	private void pressKey(JTextComponent textField, Integer keyCode) {
-		SwingComponentEventCreator.createComponentKeyPressEvent(textField, keyCode);
-	}
-
-	private void enterText(JTextComponent textField, String msg) {
-		boolean success = SwingComponentEventCreator.createTextEvent(textField, msg);
-		if (!success) {
-			this.failure("Could not enter text '" + msg + "' into JTextComponent");
-		}
-	}
-
-	private String readText(JTextComponent textField) {
-		String text = SwingComponentEventCreator.readText(textField);
-		return text;
-	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	boolean isAvailable(Component component) {
-		return component instanceof JTextComponent && (((JTextComponent) component).isEnabled() || ((JTextComponent) component).isEditable());
+		return component.isEnabled();
 	}
 }

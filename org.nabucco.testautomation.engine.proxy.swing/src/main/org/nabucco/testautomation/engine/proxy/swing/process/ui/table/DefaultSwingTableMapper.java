@@ -18,10 +18,9 @@ package org.nabucco.testautomation.engine.proxy.swing.process.ui.table;
 
 import javax.swing.JTable;
 
-import org.nabucco.testautomation.engine.base.util.PropertyHelper;
+import org.nabucco.testautomation.property.facade.datatype.util.PropertyHelper;
 import org.nabucco.testautomation.engine.proxy.swing.process.ui.event.SwingComponentEventCreator;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 
 /**
  * DefaultSwingTableMapper
@@ -46,9 +45,8 @@ class DefaultSwingTableMapper implements SwingTableMapper {
             // hgruenwald: skip last invisible column.
             for (int col = 0; col < table.getModel().getColumnCount() - 1; col++) {
 
-                String value = SwingComponentEventCreator.readText(table, row, col)
-                        .replace(":", "").replace(" ", "").trim();
-                PropertyHelper.add(PropertyHelper.createStringProperty(String.valueOf(col), value), rowMap);
+                String value = SwingComponentEventCreator.readText(table, row, col);
+                PropertyHelper.add(PropertyHelper.createTextProperty(String.valueOf(col), value), rowMap);
             }
             PropertyHelper.add(rowMap, parentList);
         }

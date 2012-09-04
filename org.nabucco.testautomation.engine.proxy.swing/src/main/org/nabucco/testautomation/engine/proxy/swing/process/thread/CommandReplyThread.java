@@ -22,8 +22,8 @@ import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.Queue;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.proxy.swing.process.ProcessCommunicationConstants;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReply;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReplyType;
@@ -37,7 +37,7 @@ import org.nabucco.testautomation.engine.proxy.swing.process.ser.CommandAndReply
  */
 public class CommandReplyThread extends Thread {
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             CommandReplyThread.class);
 
     private BufferedReader reader;

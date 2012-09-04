@@ -19,7 +19,6 @@ package org.nabucco.testautomation.engine.proxy.swing.process.ui.event;
 import java.awt.Component;
 import java.awt.TextComponent;
 import java.awt.Window;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -36,9 +35,6 @@ import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.TreePath;
 
-import org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessInvocationException;
-import org.nabucco.testautomation.engine.proxy.swing.process.ui.util.SwingTreePathGenerator;
-
 import junit.extensions.jfcunit.JFCTestCase;
 import junit.extensions.jfcunit.TestHelper;
 import junit.extensions.jfcunit.eventdata.AbstractMouseEventData;
@@ -49,6 +45,9 @@ import junit.extensions.jfcunit.eventdata.JTreeMouseEventData;
 import junit.extensions.jfcunit.eventdata.KeyEventData;
 import junit.extensions.jfcunit.eventdata.MouseEventData;
 import junit.extensions.jfcunit.eventdata.StringEventData;
+
+import org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessInvocationException;
+import org.nabucco.testautomation.engine.proxy.swing.process.ui.util.SwingTreePathGenerator;
 
 
 /**
@@ -151,11 +150,11 @@ public final class SwingComponentEventCreator {
     public static void createComponentKeyPressEvent(JComponent component, Integer keyCode) {
         String name = (component.getName() == null) ? "null" : component.getName();
         String type = component.getClass().getSimpleName();
-        System.out.println("Execute enter button on Swing component [" + name + ", " + type + "].");
+        System.out.println("Execute keycode " + keyCode + " on Swing component [" + name + ", " + type + "].");
 
         JFCTestCase testCase = TestHelper.getCurrentTestCase();
 
-        KeyEventData event = new KeyEventData(testCase, component, KeyEvent.VK_ENTER);
+        KeyEventData event = new KeyEventData(testCase, component, keyCode);
         testCase.getHelper().sendKeyAction(event);
     }
 
@@ -282,7 +281,7 @@ public final class SwingComponentEventCreator {
         TreePath treePath = SwingTreePathGenerator.getInstance().getTreePath(path, tree);
 
         if (treePath == null) {
-            System.out.println("Path for SwingTree not valid.");
+            System.err.println("Path for SwingTree not valid.");
             return;
         }
 

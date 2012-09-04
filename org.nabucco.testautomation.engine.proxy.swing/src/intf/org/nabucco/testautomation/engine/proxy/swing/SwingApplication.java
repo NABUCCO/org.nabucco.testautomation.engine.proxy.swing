@@ -46,5 +46,11 @@ public interface SwingApplication extends SwingEngineOperation {
 	SwingTextInput getSwingTextInput();
 
 	SwingTree getSwingTree();
+	
+	SwingPrint getSwingPrint();
+
+	SwingJComponent getSwingComponent();
+	
+	SwingLabel getSwingLabel();
 
 }

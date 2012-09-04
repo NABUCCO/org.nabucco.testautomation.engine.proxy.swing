@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.nabucco.testautomation.engine.base.logging.NBCTestLogger;
-import org.nabucco.testautomation.engine.base.logging.NBCTestLoggingFactory;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLogger;
+import org.nabucco.framework.base.facade.datatype.logger.NabuccoLoggingFactory;
 import org.nabucco.testautomation.engine.proxy.swing.process.client.ProcessInvocationException;
 import org.nabucco.testautomation.engine.proxy.swing.process.command.ProcessCommand;
 import org.nabucco.testautomation.engine.proxy.swing.process.reply.CommandReply;
@@ -49,7 +49,7 @@ public class ProcessCommunication implements Closeable {
 
     private static final int MAX_TIMEOUT = 180000;
 
-    private static final NBCTestLogger logger = NBCTestLoggingFactory.getInstance().getLogger(
+    private static final NabuccoLogger logger = NabuccoLoggingFactory.getInstance().getLogger(
             ProcessCommunication.class);
 
     private CommandReplyThread inputStreamHandler;
@@ -93,6 +93,7 @@ public class ProcessCommunication implements Closeable {
         initErrorStreamHandler();
 
         this.socket = new Socket(host, port);
+        
         initInputStreamHandler();
         initExecutionThread();
 

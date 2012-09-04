@@ -16,12 +16,8 @@
 */
 package org.nabucco.testautomation.engine.proxy.swing.process.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nabucco.testautomation.engine.proxy.swing.SwingActionType;
-
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
 import org.nabucco.testautomation.script.facade.datatype.metadata.Metadata;
 
 /**
@@ -33,7 +29,7 @@ final class SwingProcessComponentTestThread implements Runnable {
 
     private PropertyList propertyList;
 
-    private List<Metadata> metadataList;
+    private Metadata metadata;
 
     private SwingActionType actionType;
 
@@ -44,7 +40,7 @@ final class SwingProcessComponentTestThread implements Runnable {
      * 
      * @param propertyList
      *            the list of properties
-     * @param metadataList
+     * @param metadata
      *            the list of metadata
      * @param actionType
      *            the action type
@@ -52,11 +48,11 @@ final class SwingProcessComponentTestThread implements Runnable {
      *            the swing component to execute
      */
     public SwingProcessComponentTestThread(PropertyList propertyList,
-            List<Metadata> metadataList, SwingActionType actionType,
+            Metadata metadata, SwingActionType actionType,
             SwingProcessComponentSupport swingComponent) {
 
         this.propertyList = propertyList;
-        this.metadataList = new ArrayList<Metadata>(metadataList);
+        this.metadata = metadata;
         this.actionType = actionType;
 
         if (swingComponent == null) {
@@ -71,7 +67,7 @@ final class SwingProcessComponentTestThread implements Runnable {
      */
     @Override
     public void run() {
-        swingComponent.internalExecute(propertyList, metadataList, actionType);
+        swingComponent.internalExecute(propertyList, metadata, actionType);
         swingComponent.flushAWT();
     }
 

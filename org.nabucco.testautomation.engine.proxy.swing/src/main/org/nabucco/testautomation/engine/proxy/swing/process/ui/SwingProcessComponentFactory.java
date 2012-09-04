@@ -81,6 +81,12 @@ public class SwingProcessComponentFactory {
         	return new SwingProcessComboBox();
         case SWING_FRAME:
         	return new SwingProcessFrame();
+        case SWING_PRINT:
+        	return new SwingProcessPrint();
+        case SWING_COMPONENT:
+        	return new SwingProcessJComponent();
+        case SWING_LABEL:
+        	return new SwingProcessLabel();
         default:
             throw new IllegalArgumentException("SwingEngineOperationType '" + type + "' is not supported.");
         }
